@@ -1,0 +1,1 @@
+# A lightweight blockchain built using Golang
