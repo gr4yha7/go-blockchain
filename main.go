@@ -1,49 +1,13 @@
 package main
 
 import (
-	"bytes"
-	"crypto/sha256"
 	"fmt"
+
+	"github.com/gr4yha7/go-blockchain/blockchain"
 )
 
-type Block struct {
-	Hash         []byte
-	Data         []byte
-	PreviousHash []byte
-}
-
-type Blockchain struct {
-	Blocks []*Block
-}
-
-func (b *Block) DeriveHash() {
-	info := bytes.Join([][]byte{b.Data, b.PreviousHash}, []byte{})
-	hash := sha256.Sum256(info)
-	b.Hash = hash[:]
-}
-
-func CreateBlock(data string, prevHash []byte) *Block {
-	block := Block{[]byte{}, []byte(data), prevHash}
-	block.DeriveHash()
-	return &block
-}
-
-func GenesisBlock() *Block {
-	return CreateBlock("Genesis block", []byte{})
-}
-
-func (c *Blockchain) AddBlock(data string) {
-	prevHash := c.Blocks[len(c.Blocks)-1].Hash
-	block := CreateBlock(data, prevHash)
-	c.Blocks = append(c.Blocks, block)
-}
-
-func InitializeBlockchain() *Blockchain {
-	return &Blockchain{[]*Block{GenesisBlock()}}
-}
-
 func main() {
-	blockchain := InitializeBlockchain()
+	blockchain := blockchain.InitializeBlockchain()
 
 	blockchain.AddBlock("First block")
 	blockchain.AddBlock("Second block")
@@ -54,4 +18,5 @@ func main() {
 		fmt.Printf("Data: %s\n", string(bc.Data))
 		fmt.Printf("Hash: %x\n", bc.Hash)
 	}
+
 }
